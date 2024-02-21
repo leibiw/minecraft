@@ -1,20 +1,21 @@
 module "eks" {
   source = "terraform-aws-modules/eks/aws"
-  version = "19.21.0"
+  version = "20.0"
 
   cluster_name                   = "sphere"
   cluster_version                = "1.29"
   cluster_endpoint_public_access = true
 
   cluster_addons = {
-    coredns = {
-        most_recent = true
-    }
-    kube-proxy = {
-        most_recent = true
-    }
-    vpc-cni = {
-        most_recent = true
+     coredns = {
+    addon_version               = "v1.11.1-eksbuild.4"
+    resolve_conflicts_on_create = "OVERWRITE"
+  }
+  kube-proxy = {
+    resolve_conflicts_on_create = "OVERWRITE"
+  }
+  vpc-cni = {
+    resolve_conflicts_on_create = "OVERWRITE"
     }
   }
   
