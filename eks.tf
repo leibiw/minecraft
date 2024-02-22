@@ -8,25 +8,25 @@ module "eks" {
 
   cluster_addons = {
      coredns = {
-    addon_version               = "v1.11.1-eksbuild.4"
-    resolve_conflicts_on_create = "OVERWRITE"
-  }
+      addon_version               = "v1.11.1-eksbuild.4"
+      resolve_conflicts_on_create = "OVERWRITE"
+      }   
+
   kube-proxy = {
     resolve_conflicts_on_create = "OVERWRITE"
-  }
+    }
+
   vpc-cni = {
     resolve_conflicts_on_create = "OVERWRITE"
     }
   }
   
-
   vpc_id                   = module.vpc.vpc_id
   subnet_ids               = module.vpc.private_subnets
   control_plane_subnet_ids = module.vpc.intra_subnets
 
-
   eks_managed_node_group_defaults = {
-    ami_type            = "AL2_x86_64"
-    instance_types      = ["t2.medium", "t3.medium"]
+    ami_type       = "AL2_x86_64"
+    instance_types = ["t3.medium"]
   }
-} 
+}
