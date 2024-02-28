@@ -8,7 +8,7 @@ module "eks" {
 
   cluster_addons = {
      coredns = {
-      addon_version               = "v1.11.1-eksbuild.4"
+      most_recent                 = true
       resolve_conflicts_on_create = "OVERWRITE"
       }   
 
