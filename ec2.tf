@@ -19,6 +19,21 @@ resource "aws_instance" "management_node" {
               EOF
 }
 
+resource "aws_instance" "management_node" {
+  # Existing configuration
+
+  iam_instance_profile = aws_iam_instance_profile.management_node_profile.name
+
+  # ... other configuration options
+}
+
+resource "aws_iam_instance_profile" "management_node_profile" {
+  name = "management_node_profile"
+
+  # Attach the IAM role to the profile
+  role = "arn:aws:iam::632161769103:role/EC2_role"
+}
+
 resource "aws_security_group" "management_node_sg" {
  name        = "management_node_sg"
  description = "Security group for EKS management node"
@@ -35,7 +50,7 @@ resource "aws_security_group" "management_node_sg" {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["32.132.108.218/30"]
  }
 
  tags = {
