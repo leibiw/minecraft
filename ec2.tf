@@ -1,8 +1,8 @@
-resource "aws_instance" "management_node" {
+resource "aws_instance" "management_node_wg" {
  ami           = "ami-0c7217cdde317cfec" 
- instance_type = "t2.micro"
+ instance_type = "t2.small"
 
- key_name = "AKIAZGL6HC2HZBGSBMPH"
+ key_name = "vchin1"
 
  vpc_security_group_ids = [aws_security_group.management_node_sg.id]
  subnet_id              = module.vpc.private_subnets[0] 
@@ -17,21 +17,6 @@ resource "aws_instance" "management_node" {
               yum install -y aws-cli
               yum install -y kubectl
               EOF
-}
-
-resource "aws_instance" "management_node" {
-  # Existing configuration
-
-  iam_instance_profile = aws_iam_instance_profile.management_node_profile.name
-
-  # ... other configuration options
-}
-
-resource "aws_iam_instance_profile" "management_node_profile" {
-  name = "management_node_profile"
-
-  # Attach the IAM role to the profile
-  role = "arn:aws:iam::632161769103:role/EC2_role"
 }
 
 resource "aws_security_group" "management_node_sg" {
@@ -50,7 +35,7 @@ resource "aws_security_group" "management_node_sg" {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["32.132.108.218/30"]
+    cidr_blocks = ["172.31.0.0/16"]
  }
 
  tags = {
