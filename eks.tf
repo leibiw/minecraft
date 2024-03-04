@@ -7,17 +7,14 @@ module "eks" {
   cluster_endpoint_public_access = true
 
   cluster_addons = {
-     coredns = {
-      addon_version               = "v1.11.1-eksbuild.6"
-      resolve_conflicts_on_create = "OVERWRITE"
-      }
-
-  kube-proxy = {
-    resolve_conflicts_on_create = "OVERWRITE"
+    coredns = {
+      most_recent = true
     }
-
-  vpc-cni = {
-    resolve_conflicts_on_create = "OVERWRITE"
+    kube-proxy = {
+      most_recent = true
+    }
+    vpc-cni = {
+      most_recent = true
     }
   }
 
@@ -25,10 +22,28 @@ module "eks" {
   subnet_ids               = module.vpc.private_subnets
   control_plane_subnet_ids = module.vpc.intra_subnets
 
-  eks_managed_node_group_defaults = {
-    ami_type       = "AL2_x86_64"
-    desire_capacity = 2
-    max_capacity    = 3
-    instance_types = ["t3.medium"]
+  eks_managed_node_groups = {
+
+    green = {
+      use_custom_launch_template = false
+      min_size     = 1
+      max_size     = 10
+      desired_size = 1
+
+      instance_types = ["t3.large"]
+      capacity_type  = "SPOT"
+    }
+
+  # Fargate Profile(s)
+    fargate_profiles = {
+      default = {
+        name = "default"
+        selectors = [
+        {
+          namespace = "default"
+         }
+        ]
+      }
+   }
   }
 }
