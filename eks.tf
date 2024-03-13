@@ -32,18 +32,6 @@ module "eks" {
       instance_types = ["t3.large"]
       capacity_type  = "SPOT"
     }
-
-  # Fargate Profile(s)
-    fargate_profiles = {
-      default = {
-        name = "default"
-        selectors = [
-        {
-          namespace = "default"
-         }
-        ]
-      }
-   }
   }
   
   cluster_security_group_additional_rules = {
