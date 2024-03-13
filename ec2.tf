@@ -1,13 +1,12 @@
 resource "aws_instance" "management_node_wg" {
  ami           = "ami-07d9b9ddc6cd8dd30" 
  instance_type = "t2.small"
+ key_name      = "home1"
 
- key_name = "home1"
-
- vpc_security_group_ids = [aws_security_group.management_node_sg.id]
- associate_public_ip_address = true
  subnet_id              = module.vpc.private_subnets[0] 
-
+ associate_public_ip_address = true
+ vpc_security_group_ids = [aws_security_group.management_node_sg.id]
+ 
  tags = {
     Name           = "EKS-Management-Node"
     Enviroment     = "dev"
