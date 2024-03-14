@@ -27,18 +27,18 @@ resource "aws_security_group" "minecraft_elb_sg" {
   vpc_id      = module.vpc.vpc_id
 
   ingress {
-    description     = "Allow SSH Access to my Public IP"
-    from_port       = 25565
-    to_port         = 25565
-    protocol        = "tcp"
-    cidr_blocks     = ["73.70.24.45/32", "32.132.108.216/30"]
+    description = "Allow Minecraft Access"
+    from_port   = 25565
+    to_port     = 25565
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
-    from_port       = 0
-    to_port         = 0
-    protocol        = "-1"
-    cidr_blocks     = ["0.0.0.0/0"]
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   tags = {
@@ -61,6 +61,5 @@ resource "kubernetes_service" "minecraft" {
       target_port = 25565
     }
     type = "LoadBalancer"
-    load_balancer_ip = aws_elb.minecraft.dns_name
   }
 }
