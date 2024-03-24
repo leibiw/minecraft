@@ -1,18 +1,3 @@
-# Kubernetes provider configuration
-data "aws_eks_cluster" "default" {
-  name = "sphere"
-}
-
-data "aws_eks_cluster_auth" "default" {
-  name = "sphere"
-}
-
-provider "kubernetes" {
-  host                   = data.aws_eks_cluster.default.endpoint
-  cluster_ca_certificate = base64decode(data.aws_eks_cluster.default.certificate_authority[0].data)
-  token                  = data.aws_eks_cluster_auth.default.token
-}
-
 # Minecraft deployment
 resource "kubernetes_deployment" "minecraft" {
   metadata {
@@ -55,4 +40,22 @@ resource "kubernetes_deployment" "minecraft" {
       }
     }
   }
+
+  # Add this block to create an explicit dependency on the EKS cluster
+  depends_on = [module.eks]
+}
+
+# Kubernetes provider configuration
+data "aws_eks_cluster" "default" {
+  name = module.eks.cluster_id
+}
+
+data "aws_eks_cluster_auth" "default" {
+  name = module.eks.cluster_id
+}
+
+provider "kubernetes" {
+  host                   = data.aws_eks_cluster.default.endpoint
+  cluster_ca_certificate = base64decode(data.aws_eks_cluster.default.certificate_authority[0].data)
+  token                  = data.aws_eks_cluster_auth.default.token
 }

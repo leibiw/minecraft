@@ -1,7 +1,3 @@
-locals {
-  sphere = "my-sphere-cluster"
-}
-
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
@@ -26,8 +22,8 @@ module "vpc" {
   # Enable auto-assign public IP for the private subnets
   private_subnet_tags = {
     "kubernetes.io/cluster/${local.cluster}" = "shared"
-    "kubernetes.io/role/internal-elb"       = "1"
-    "map_public_ip_on_launch"               = "true"
+    "kubernetes.io/role/internal-elb"        = "1"
+    "map_public_ip_on_launch"                = "true"
   }
 }
 
