@@ -1,5 +1,5 @@
 # locals.tf
 locals {
-  cluster = "sphere"
-  sphere  = "my-sphere-cluster"
+  cluster               = "sphere"
+  sphere                = "my-sphere-cluster"
 }

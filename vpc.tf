@@ -26,10 +26,3 @@ module "vpc" {
     "map_public_ip_on_launch"                = "true"
   }
 }
-
-resource "aws_route" "public_ip_route" {
-  count                  = length(module.vpc.private_route_table_ids)
-  route_table_id         = module.vpc.private_route_table_ids[count.index]
-  destination_cidr_block = "73.70.24.45/32"
-  gateway_id             = module.vpc.igw_id
-}

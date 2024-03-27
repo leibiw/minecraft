@@ -7,6 +7,8 @@ resource "kubernetes_deployment" "minecraft" {
     }
   }
 
+  depends_on = [module.eks]  # Wait for EKS cluster creation
+
   spec {
     replicas = 1
 
@@ -40,22 +42,21 @@ resource "kubernetes_deployment" "minecraft" {
       }
     }
   }
-
-  # Add this block to create an explicit dependency on the EKS cluster
-  depends_on = [module.eks]
 }
 
 # Kubernetes provider configuration
+provider "kubernetes" {
+    host                   = data.aws_eks_cluster.default.endpoint
+    cluster_ca_certificate = base64decode(data.aws_eks_cluster.default.certificate_authority[0].data)
+    token                  = data.aws_eks_cluster_auth.default.token
+}
+
+
+# Retrieve EKS cluster information
 data "aws_eks_cluster" "default" {
-  name = module.eks.cluster_id
+  name = local.cluster
 }
 
 data "aws_eks_cluster_auth" "default" {
-  name = module.eks.cluster_id
-}
-
-provider "kubernetes" {
-  host                   = data.aws_eks_cluster.default.endpoint
-  cluster_ca_certificate = base64decode(data.aws_eks_cluster.default.certificate_authority[0].data)
-  token                  = data.aws_eks_cluster_auth.default.token
+  name = local.cluster
 }
